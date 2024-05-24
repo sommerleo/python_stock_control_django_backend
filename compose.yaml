@@ -1,0 +1,43 @@
+services:
+  stock_control_backend:
+    build:
+      context: .
+    secrets:
+      - pg_password
+    environment:
+     - DB_NAME=stock_control
+     - DB_USER=postgres
+     - DB_PASSWORD=/run/secrets/pg_password
+     - DB_HOST=pg_database
+     - DB_PORT=5432
+    ports:
+      - 8000:8000
+    depends_on:
+      pg_database:
+        condition: service_healthy
+
+  pg_database:
+    image: postgres:16.3
+    restart: always
+    user: postgres
+    secrets:
+      - pg_password
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=stock_control
+      - POSTGRES_PASSWORD_FILE=/run/secrets/pg_password
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
+
+secrets:
+  pg_password:
+    file: ./pg/pg_password
