@@ -74,12 +74,17 @@ WSGI_APPLICATION = "stock_control_backend.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-with open(os.environ.get("DB_PASSWORD")) as password_file:
-    pw = password_file.read()
+try:
+    with open(os.environ.get("DB_PASSWORD")) as password_file:
+        pw = password_file.read()
+except:
+    pg_password_path = BASE_DIR.parent.__str__() + '/pg/pg_password'
+    with open(pg_password_path) as password_file:
+        pw = password_file.read()
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("DB_HOST", "pg_database"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
         "PORT": os.environ.get("DB_PORT", "5432"),
         "NAME": os.environ.get("DB_NAME", "stock_control"),
         "USER": os.environ.get("DB_USER", "postgres"),
