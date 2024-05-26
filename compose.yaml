@@ -27,8 +27,8 @@ services:
     environment:
       - POSTGRES_DB=stock_control
       - POSTGRES_PASSWORD_FILE=/run/secrets/pg_password
-    expose:
-      - 5432
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
