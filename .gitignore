@@ -1,5 +1,3 @@
-# postgres password
-pg/
 # Python
 *.pyc
 __pycache__/
